@@ -1,0 +1,26 @@
+---
+- name: Get AWS facts
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Task to create the VPC
+      ec2_instance_info:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+      register: ansible_ec2_info
+
+    - name: List AWS facts
+      debug:
+        msg: "{{ ansible_ec2_info.instances[0].instance_id }}"
+      when:  ansible_ec2_info.instances != []
+
+    - name: Task to terminate the RHEL EC2 instance
+      ec2:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        region: "{{ aws_region }}"
+        instance_id: "{{ ansible_ec2_info.instances[0].instance_id }}"
+        wait: yes
+        state: absent
+      when:  ansible_ec2_info.instances != []

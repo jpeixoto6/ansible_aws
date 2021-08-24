@@ -1,0 +1,31 @@
+---
+- name: Delete AWS SG 
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Task to get SG info
+      ec2_group_info:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        filters:
+          group_name: ansible_tower_sg
+      register: ansible_aws_sg_info
+
+    - name: List AWS SG info
+      debug:
+        msg: "{{ ansible_aws_sg_info  }}"
+      when:  ansible_aws_sg_info.security_groups!= []
+
+    - name: Task to delete  AWS Security Groups
+      ec2_group:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        name: ansible_tower_sg
+        group_id: "{{ ansible_aws_sg_info.security_groups[0].group_id }}"
+        description: AWS Security Group for Ansible Tower Demonstration
+#        vpc_id: "{{ ansible_tower_vpc.vpc.id }}"
+        region: "{{ aws_region }}"
+        state: absent
+
+

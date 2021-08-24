@@ -1,0 +1,25 @@
+--- 
+- name: Play to create EC2 resources and finally a RHEL 8 instance
+  hosts: localhost
+  connection: local
+  vars:
+    aws_region: us-west-1
+    aws_vpc_name: ansible_tower
+  tasks:
+    - name: Task to create the VPC
+      ec2_vpc_net:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        name: ansible_tower_vpc
+        cidr_block: 10.10.0.0/16
+        region: "{{ aws_region }}"
+        tenancy: default
+        tags:
+          vpc_name: "{{ aws_vpc_name }}"
+      register: ansible_tower_vpc
+      
+    - name: debug
+      debug:
+        msg: "{{ ansible_tower_vpc }}"
+    
+

@@ -1,0 +1,44 @@
+--- 
+- name: Play to create EC2 resources and finally a RHEL 8 instance
+  hosts: localhost
+  connection: local
+  vars:
+    aws_region: us-west-1
+    aws_vpc_name: ansible_tower
+  tasks:
+    - name: create key pair using provided key_material 
+      ec2_key: 
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        region: "{{ aws_region }}"
+        name: ansible-tower-aws-key
+        key_material: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDIro3SN80ckrxyHid65mvuDi2zY8zakQ1G32F8vT2OZtpX8nQ7WgJdqvOYI/Eba83oEZGfI97DZFab2tNVi5GPJoc2wNfd6UVpQTi9DdKuldT9JjYTZuHdEfK+AFixyOtkvabmd7EggZlxtfrZ14mxzTttouWAb6JRQAtQxBGw1Kb7NOijSlxQrX8cqKTNU4ODO3/+du3pFawA2E5LTXuebBhWk5k5BCudQFWNCVlABWuAiblFDv9IvhCnf6c71YflEPyoDdGq5hV/OiKm3fa3i1LBycW61+PpnEf1nCoIhVQYo3jIcaRjJNGPC8DaU6/gbq731WfvPdnqwYOzcAN6ItuLA203ev8Pz2AZ2PvzK9H+QXCxJykYNwxN7daZNRp40RKnf8WD2yZbN7rnlk+HYoqzxqq3KU8HzD7lR1WNIuqVjVoYH4NqoeslX8FGKsG2BiQQt5fw/WcFKcbiopUa4ab0rACxidNB38ppMj9sgFGjOFPzHLQcyBo8WajL/7dSDZ0QTO2dRSpJSJ4n3aMmCBhoF/WXPrunNTMhUFoSLleQmy9Vvc2/cOy6+SWvN+bELHKm9AkEfaHSaEtH9CshimjPHf6sStdZoQi4IIO83FLeedzH5XU589Z5aXzoWv8x6BoIpJMCdzqOqojNKzHqOEsQEfOe2NAAHfseS65cvw== My AWS SSH Keys'
+      
+    - name: Task to get route table info
+      ec2_vpc_subnet_info:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        filters:
+          tag:vpc_name: ansible_tower
+      register: ansible_aws_subnet
+
+    - name: List AWS route table  info
+      debug:
+        msg: "{{ ansible_aws_subnet.subnets[0].subnet_id  }}"
+      when:  ansible_aws_subnet.subnets != []
+
+    - name: Task to provision the RHEL EC2 instance
+      ec2:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        region: "{{ aws_region }}"
+        key_name: ansible-tower-aws-key
+        instance_type: t2.micro
+        image: ami-054965c6cd7c6e462
+        wait: yes
+        group: ansible_tower_sg
+        count: 1
+        vpc_subnet_id: "{{ ansible_aws_subnet.subnets[0].subnet_id }}" 
+        assign_public_ip: yes
+

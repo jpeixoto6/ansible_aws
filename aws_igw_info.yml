@@ -1,0 +1,20 @@
+---
+- name: Get AWS IGW  info
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Task to get IGW info
+      ec2_vpc_igw_info:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        filters:
+         #  "tag:Name": "ansible_tower_vpc"
+          tag:vpc_name: ansible_tower
+      register: ansible_aws_igw_info
+
+    - name: List AWS IGW info
+      debug:
+        msg: "{{ ansible_aws_igw_info.internet_gateways[0].internet_gateway_id  }}"
+      when:  ansible_aws_igw_info.internet_gateways != []
+

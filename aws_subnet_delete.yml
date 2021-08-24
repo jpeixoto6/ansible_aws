@@ -1,0 +1,31 @@
+---
+- name: Delete  AWS subnet 
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: Task to get subnet info
+      ec2_vpc_subnet_info:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        aws_region: "{{ aws_region }}"
+        filters:
+          tag:vpc_name: ansible_tower
+      register: ansible_aws_subnet_info
+
+    - name: List AWS subnet info
+      debug:
+        msg: "{{ ansible_aws_subnet_info.subnets[0].subnet_id  }}"
+      when:  ansible_aws_subnet_info.subnets != []
+
+    - name: Task to delete the subnet
+      ec2_vpc_subnet:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        vpc_id: "{{ ansible_aws_subnet_info.subnets[0].vpc_id  }}"
+        cidr: "{{ ansible_aws_subnet_info.subnets[0].cidr_block  }}"
+        tags: 
+          vpc_name: ansible_tower
+        region: "{{ aws_region }}"
+        state: absent
+      when:  ansible_aws_subnet_info.subnets != []
+
