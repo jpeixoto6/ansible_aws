@@ -5,8 +5,8 @@
   tasks:
     - name: Task to get SG info
       ec2_group_info:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
         filters:
           group_name: ansible_tower_sg
