@@ -6,11 +6,13 @@
     aws_region: us-west-1
 
   tasks:
-    - name: Task to create the VPC
+    - name: Task to Get VPC info
       ec2_instance_info:
 #        aws_access_key: "{{ aws_access_key }}"
 #        aws_secret_key: "{{ aws_secret_key }}"
         aws_region: "{{ aws_region }}"
+        filters:
+          instance-state-name: [ "running" ]
       register: ansible_ec2_info
 
     - name: List AWS facts
