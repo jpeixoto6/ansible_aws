@@ -22,8 +22,8 @@
 
     - name: Create an Internet Gateway and associate to the VPC
       ec2_vpc_igw:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         vpc_id: "{{ ansible_tower_vpc.vpcs[0].id }}"
         region: "{{ aws_region }}"
         tags:

@@ -22,8 +22,8 @@
 
     - name: Create a subnet in the VPC
       ec2_vpc_subnet:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         state: present
         vpc_id: "{{ ansible_tower_vpc.vpcs[0].id }}"
         cidr: 10.10.0.0/20

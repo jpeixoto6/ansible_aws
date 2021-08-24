@@ -2,6 +2,9 @@
 - name: Get AWS VPC net info
   hosts: localhost
   connection: local
+  vars:
+    aws_region: us-west-1
+
   tasks:
     - name: Task to get VPC info
       ec2_vpc_net_info:
@@ -19,8 +22,8 @@
 
     - name: Task to delete the VPC
       ec2_vpc_net:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         name: ansible_tower_vpc
         region: "{{ aws_region }}"
         cidr_block: 10.10.0.0/16

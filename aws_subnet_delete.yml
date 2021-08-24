@@ -2,6 +2,9 @@
 - name: Delete  AWS subnet 
   hosts: localhost
   connection: local
+  vars:
+    aws_region: us-west-1
+
   tasks:
     - name: Task to get subnet info
       ec2_vpc_subnet_info:
@@ -19,8 +22,8 @@
 
     - name: Task to delete the subnet
       ec2_vpc_subnet:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         vpc_id: "{{ ansible_aws_subnet_info.subnets[0].vpc_id  }}"
         cidr: "{{ ansible_aws_subnet_info.subnets[0].cidr_block  }}"
         tags: 

@@ -22,8 +22,8 @@
 
     - name: Task to create AWS Security Groups
       ec2_group:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         name: ansible_tower_sg
         description: AWS Security Group for Ansible Tower Demonstration
         vpc_id: "{{ ansible_tower_vpc.vpcs[0].id }}"

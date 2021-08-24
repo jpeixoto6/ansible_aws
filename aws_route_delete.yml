@@ -2,6 +2,9 @@
 - name: Get AWS route info
   hosts: localhost
   connection: local
+  vars:
+    aws_region: us-west-1
+
   tasks:
     - name: Task to get route table info
       ec2_vpc_route_table_info:
@@ -19,8 +22,8 @@
 
     - name: Task to delete the route
       ec2_vpc_route_table:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         region: "{{ aws_region }}"
         route_table_id: "{{ ansible_aws_route_info.route_tables[0].id }}"
         lookup: id

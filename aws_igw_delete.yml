@@ -2,6 +2,9 @@
 - name: Delete AWS IGW  
   hosts: localhost
   connection: local
+  vars:
+    aws_region: us-west-1
+
   tasks:
     - name: Task to get IGW info
       ec2_vpc_igw_info:
@@ -20,8 +23,8 @@
 
     - name: Task to delete  AWS IGW
       ec2_vpc_igw:
-        aws_access_key: "{{ aws_access_key }}"
-        aws_secret_key: "{{ aws_secret_key }}"
+#        aws_access_key: "{{ aws_access_key }}"
+#        aws_secret_key: "{{ aws_secret_key }}"
         vpc_id: "{{ ansible_aws_igw_info.internet_gateways[0].attachments[0].vpc_id }}"
         region: "{{ aws_region }}"
         state: absent
